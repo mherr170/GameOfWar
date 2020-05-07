@@ -19,7 +19,7 @@ namespace GameOfWar
         private const string SPADES = "Spades";
         private const string CLUBS = "Clubs";
 
-        private List<Card> deckOfCards = new List<Card>();
+        public List<Card> deckOfCards = new List<Card>();
 
         private List<String> cardSuits = new List<String>();
         private List<int> cardValuesPerSuit = new List<int>();
@@ -85,7 +85,6 @@ namespace GameOfWar
             //Suit Loop will run 4 times, once for each suit
             for (int suit = 0; suit < numberOfCardSuits; suit++)
             {
-
                 //Card Loop will run 13 times, per suit.
                 for (int cardCount = 0; cardCount < numberOfCardsPerSuit; cardCount++)
                 {

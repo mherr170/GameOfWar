@@ -1,68 +1,59 @@
 ﻿using System;
-using System.Timers;
+using System.Collections.Generic;
+using System.Text;
 
 namespace GameOfWar
 {
     class Game
     {
-        private const int EXIT = 2;
-        private const int SUCCESSFUL_USER_EXIT = 0;
-        private const int CLOSE_PROGRAM_TIMER_VALUE = 3000;
 
-        static void Main(string[] args)
+        public Game()
         {
-            int menuChoice = 0;
+            Deck gameDeck = new Deck();
 
-            Timer closeAppTimer = new Timer(CLOSE_PROGRAM_TIMER_VALUE);
+            Player humanPlayer = new Player();
+            Player computerPlayer = new Player();
+            computerPlayer.isComputerPlayer = true;
 
-            while (menuChoice != EXIT)
+            ShuffleAndDistributeCards(gameDeck, humanPlayer, computerPlayer);
+        }
+
+        private void ShuffleAndDistributeCards(Deck gameDeck, Player humanPlayer, Player computerPlayer)
+        {
+            Random r = new Random();
+
+            //Loop decrements by two because one iteration deals out two cards.
+            for (int numCards = 52; numCards > 0; numCards -= 2 )
             {
-                Console.WriteLine();
-                Console.WriteLine("--------------------------");
-                Console.WriteLine("--------------------------");
-                Console.WriteLine("------Game Of War---------");
-                Console.WriteLine("--------------------------");
-                Console.WriteLine("--------------------------");
-                Console.WriteLine();
+                //Generate a random number from 0 to one less than the amount of cards remaining in the deck.
+                //It is one less because Random.Next function will return a number from 0 up to but not including the specified maximum.
+                int num = r.Next(numCards - 1);
 
-                Console.WriteLine("1) Create and print a deck of cards.");
-                Console.WriteLine("2) Exit the game.");
-                Console.WriteLine();
+                //Take that random number, and assign the card that associates with it to the Human Player.
+                humanPlayer.playerCards.Add(gameDeck.deckOfCards[num]);
 
-                //Pause the Console from closing
-                menuChoice = Convert.ToInt32(Console.ReadLine());
+                //Console.WriteLine("The " + gameDeck.deckOfCards[num].CardValue + " of " + gameDeck.deckOfCards[num].CardSuit + " has been given to the Human Player.");
 
-                switch (menuChoice)
-                {
-                    case 1:
-                        Deck gameDeck = new Deck();
-                        gameDeck.PrintDeck();
-                        break;
-                    case 2:
+                //Remove the card you just gave to the Human Player from the gameDeck
+                gameDeck.deckOfCards.RemoveAt(num);
 
-                        //Delay the closing of the console so the end user can see the farewell message.
-                        closeAppTimer.Elapsed += CloseAppTimer_Elapsed;
-                        closeAppTimer.Start();
+                //Generate Random number from 0 to 2 less than the cards remaining, because one card has already been removed and given it to the Human.
+                num = r.Next(numCards - 2);
 
-                        Console.WriteLine();
-                        Console.WriteLine("Thank you for playing the Game Of War!");
-                        Console.WriteLine();
-                        
-                        Console.ReadKey();
+                //Assign the next card to the computer player.
+                computerPlayer.playerCards.Add(gameDeck.deckOfCards[num]);
 
-                        break;
-                    default:
-                        Console.WriteLine("The inputted option was not recognized.  Please select a valid menu option.");
-                        Console.WriteLine();
-                        break;
+                //Console.WriteLine("The " + gameDeck.deckOfCards[num].CardValue + " of " + gameDeck.deckOfCards[num].CardSuit + " has been given to the Computer Player.");
 
-                }
-            }       
+                //Remove the card given to the computer player from the deck.
+                gameDeck.deckOfCards.RemoveAt(num);
+
+            }
+
+            humanPlayer.PrintPlayerHand();
+            computerPlayer.PrintPlayerHand();
+
         }
 
-        private static void CloseAppTimer_Elapsed(object sender, ElapsedEventArgs e)
-        {
-            Environment.Exit(SUCCESSFUL_USER_EXIT);
-        }
     }
 }
