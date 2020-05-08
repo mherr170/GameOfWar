@@ -94,6 +94,7 @@ namespace GameOfWar
             }
         }
 
+        //Debugging purposes - ensure that a deck received the correct amount of cards.
         public void PrintDeck()
         {
             Console.WriteLine("");

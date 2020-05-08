@@ -17,18 +17,7 @@ namespace GameOfWar
 
             while (menuChoice != EXIT)
             {
-                Console.WriteLine();
-                Console.WriteLine("--------------------------");
-                Console.WriteLine("--------------------------");
-                Console.WriteLine("------Game Of War---------");
-                Console.WriteLine("--------------------------");
-                Console.WriteLine("--------------------------");
-                Console.WriteLine();
-
-                Console.WriteLine("1) Create and print a deck of cards.");
-                Console.WriteLine("2) Start a new game.");
-                Console.WriteLine("2) Exit the game.");
-                Console.WriteLine();
+                PrintMainMenu();
 
                 //Pause the Console from closing
                 menuChoice = Convert.ToInt32(Console.ReadLine());
@@ -37,15 +26,10 @@ namespace GameOfWar
                 switch (menuChoice)
                 {
                     case 1:
-                        //This option is to ensure that your deck has the proper amount of cards.
-                        Deck testDeck = new Deck();
-                        testDeck.PrintDeck();
-                        break;
-                    case 2:
                         //Play the game
                         Game newGame = new Game();
                         break;
-                    case 3:
+                    case 2:
                         //Delay the closing of the console so the end user can see the farewell message.
                         closeAppTimer.Elapsed += CloseAppTimer_Elapsed;
                         closeAppTimer.Start();
@@ -62,6 +46,20 @@ namespace GameOfWar
                         break;
                 }
             }       
+        }
+
+        private static void PrintMainMenu()
+        {
+            Console.WriteLine();
+            Console.WriteLine("--------------------------");
+            Console.WriteLine("--------------------------");
+            Console.WriteLine("------Game Of War---------");
+            Console.WriteLine("--------------------------");
+            Console.WriteLine("--------------------------");
+            Console.WriteLine();
+
+            Console.WriteLine("1) Start a new game.");
+            Console.WriteLine("2) Exit the game.");
         }
 
         private static void CloseAppTimer_Elapsed(object sender, ElapsedEventArgs e)

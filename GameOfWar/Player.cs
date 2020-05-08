@@ -17,6 +17,7 @@ namespace GameOfWar
 
         }
 
+        //Debugging purposes - ensure that the player has received a legitimate amount of cards.
         public void PrintPlayerHand()
         {
             Console.WriteLine("The player's deck contains " + playerCards.Count + " cards.");
