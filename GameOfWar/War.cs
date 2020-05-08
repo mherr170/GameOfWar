@@ -19,9 +19,9 @@ namespace GameOfWar
             {
                 PrintMainMenu();
 
-                //Pause the Console from closing
-                menuChoice = Convert.ToInt32(Console.ReadLine());
-
+                //No need to evaluate the TryParse result, menuChoice will handle it in the switch statement.
+                int.TryParse(Console.ReadLine(), out menuChoice);
+             
                 //replace integers with consts representing menu options.
                 switch (menuChoice)
                 {
@@ -41,6 +41,7 @@ namespace GameOfWar
                         Console.ReadKey();
                         break;
                     default:
+                        Console.WriteLine();
                         Console.WriteLine("The inputted option was not recognized.  Please select a valid menu option.");
                         Console.WriteLine();
                         break;

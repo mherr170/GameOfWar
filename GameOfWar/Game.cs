@@ -7,6 +7,7 @@ namespace GameOfWar
 {
     class Game
     {
+        private const int FIRST_CARD_IN_DECK = 0;
 
         public Game()
         {
@@ -29,15 +30,13 @@ namespace GameOfWar
             PrintGameBeginning();
 
             //while neither player has 0 cards...
-
             while (humanPlayer.playerCards.Count > 0 && computerPlayer.playerCards.Count > 0)
             {
                 PrintGameMenu();
 
-                //pressing ENTER here will break it.  Need a try/catch probably
-                menuChoice = Convert.ToInt32(Console.ReadLine());
+                int.TryParse(Console.ReadLine(), out menuChoice);
 
-                switch(menuChoice)
+                switch (menuChoice)
                 {
                     case 1:
                         PlayCard(humanPlayer, computerPlayer);
@@ -46,6 +45,9 @@ namespace GameOfWar
                         PrintRemainingHumanCards(humanPlayer);
                         break;
                     default:
+                        Console.WriteLine();
+                        Console.WriteLine("The inputted option was not recognized.  Please select a valid menu option.");
+                        Console.WriteLine();
                         break;
                 }
 
@@ -61,40 +63,115 @@ namespace GameOfWar
 
         private void PlayCard(Player humanPlayer, Player computerPlayer)
         {
-            PrintCurrentMove(humanPlayer, computerPlayer);         
+            PrintCurrentMove(humanPlayer, computerPlayer);
 
-            if (humanPlayer.playerCards.First().CardValue > computerPlayer.playerCards.First().CardValue)
+            //EnterWarPhase(humanPlayer, computerPlayer);
+
+            
+            //The Players have played two cards with the same value.  Begin "WAR" sequence.
+            if (humanPlayer.playerCards.First().CardValue == computerPlayer.playerCards.First().CardValue)
             {
-                PrintRoundWinHuman(computerPlayer);
+                 EnterWarPhase(humanPlayer, computerPlayer);
+            }
+            else if (humanPlayer.playerCards.First().CardValue > computerPlayer.playerCards.First().CardValue)
+            {
+                //Print what occurred in the round, and swap the cards between players.
+                HumanWinsRound(humanPlayer, computerPlayer);
+            }
+            else  // No Tie and the Human did not win.  Therefore the computer wins. Give the card to the computer and remove it from the human.
+            {
+                ComputerWinsRound(humanPlayer, computerPlayer);
+            }
+            
+        }
 
-                //the human wins, give the card to the human and remove it from the computer.
+        private void EnterWarPhase(Player humanPlayer, Player computerPlayer)
+        {
+            //WAR Logic
 
+            List<Card> humanWarCards = new List<Card>();
+            List<Card> computerWarCards = new List<Card>();
 
-                //Add the newly acquired card to the back of the deck.  
-                humanPlayer.playerCards.Add(computerPlayer.playerCards.First());
+            //Add the card the human already played, the additional three cards played for WAR, and the 5th played card that determines the war result.
+            humanWarCards.AddRange(humanPlayer.playerCards.GetRange(0, 5));
 
-                //Move your current first card to the BACK of the deck.
-                Card temp = humanPlayer.playerCards.First();
-                humanPlayer.playerCards.RemoveAt(0);
-                humanPlayer.playerCards.Add(temp);
+            //Remove the same 5 cards from the front of the human's deck.
+            humanPlayer.playerCards.RemoveRange(0, 5);
 
-                computerPlayer.playerCards.RemoveAt(0);
+            //Same for the computer player.
+            computerWarCards.AddRange(computerPlayer.playerCards.GetRange(0, 5));
+
+            computerPlayer.playerCards.RemoveRange(0, 5);
+
+            //Compare the last card in each player's war list.
+
+            PrintWarFinalCard(humanWarCards.Last(), computerWarCards.Last());
+
+            if (humanWarCards.Last().CardValue > computerWarCards.Last().CardValue)
+            {
+                //The Human has won war.  Add both war card lists to the back of the human deck.
+                humanPlayer.playerCards.AddRange(humanWarCards);
+                humanPlayer.playerCards.AddRange(computerWarCards);
+
+                Console.WriteLine("");
+                Console.WriteLine("You have won the WAR!");
+
+                foreach (Card computerWarCard in computerWarCards)
+                {
+                    Console.WriteLine("You have taken the " + computerWarCard.CardValue + " of " + computerWarCard.CardSuit + " from the computer!");
+                }
+
+                Console.WriteLine("");
 
             }
-            else  // The computer wins, give the card to the computer and remove it from the human.
+            else  //The Computer has won.
             {
-                PrintRoundWinComputer(humanPlayer);
+                computerPlayer.playerCards.AddRange(computerWarCards);
+                computerPlayer.playerCards.AddRange(humanWarCards);
 
-                computerPlayer.playerCards.Add(humanPlayer.playerCards.First());
+                Console.WriteLine("");
+                Console.WriteLine("The computer has won the WAR!");
 
-                Card temp = computerPlayer.playerCards.First();
-                computerPlayer.playerCards.RemoveAt(0);
-                computerPlayer.playerCards.Add(temp);
+                foreach (Card humanWarCard in humanWarCards)
+                {
+                    Console.WriteLine("The computer has taken the " + humanWarCard.CardValue + " of " + humanWarCard.CardSuit + " from your deck!");
+                }
 
-                humanPlayer.playerCards.RemoveAt(0);
+                Console.WriteLine("");
             }
 
-            // TO DO -  DEAL WITH TIES 
+        }
+
+        private void ComputerWinsRound(Player humanPlayer, Player computerPlayer)
+        {
+            PrintRoundWinComputer(humanPlayer);
+
+            //The computer gains a card.  Place it into the back of the computer deck.
+            computerPlayer.playerCards.Add(humanPlayer.playerCards.First());
+
+            //Move the winning played card that was played by the computer to the back of the deck.
+            Card winningCard = computerPlayer.playerCards.First();
+            computerPlayer.playerCards.RemoveAt(FIRST_CARD_IN_DECK);
+            computerPlayer.playerCards.Add(winningCard);
+
+            //Remove the losing card that the human played from the huamn's deck.
+            humanPlayer.playerCards.RemoveAt(FIRST_CARD_IN_DECK);
+        }
+
+        private void HumanWinsRound(Player humanPlayer, Player computerPlayer)
+        {
+            PrintRoundWinHuman(computerPlayer);
+
+            //The human gains a card.  Place it into the back of the human deck.
+            humanPlayer.playerCards.Add(computerPlayer.playerCards.First());
+
+            //Move the winning played card that was played by the human to the back of the deck.
+            Card winningCard = humanPlayer.playerCards.First();
+            humanPlayer.playerCards.RemoveAt(FIRST_CARD_IN_DECK);
+            humanPlayer.playerCards.Add(winningCard);
+
+            //Remove the losing card that the computer played from the computer's deck.
+            computerPlayer.playerCards.RemoveAt(FIRST_CARD_IN_DECK);
         }
 
         private void PrintRoundWinComputer(Player humanPlayer)
@@ -131,6 +208,17 @@ namespace GameOfWar
 
             Console.WriteLine("");
             Console.WriteLine("The computer plays the " + computerPlayer.playerCards.First().CardValue + " of " + computerPlayer.playerCards.First().CardSuit + "!");
+            Console.WriteLine("");
+        }
+
+        private void PrintWarFinalCard(Card humanWarCard, Card computerWarCard)
+        {
+            Console.WriteLine("");
+            Console.WriteLine("Your final war card is " + humanWarCard.CardValue + " of " + humanWarCard.CardSuit + "!");
+            Console.WriteLine("");
+
+            Console.WriteLine("");
+            Console.WriteLine("The computer's war card is " + computerWarCard.CardValue + " of " + computerWarCard.CardSuit + "!");
             Console.WriteLine("");
         }
 
