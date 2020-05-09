@@ -24,25 +24,6 @@ namespace GameOfWar
         private List<String> cardSuits = new List<String>();
         private List<int> cardValuesPerSuit = new List<int>();
 
-        enum CardValues
-        {
-            Zero,
-            One,
-            Two,
-            Three,
-            Four,
-            Five,
-            Six,
-            Seven,
-            Eight,
-            Nine,
-            Ten,
-            Jack,
-            Queen,
-            King,
-            Ace            
-        }
-
         public Deck()
         {
             //Build card suit list
