@@ -5,6 +5,7 @@ namespace GameOfWar
 {
     class War
     {
+        private const int START_GAME = 1;
         private const int EXIT = 2;
         private const int SUCCESSFUL_USER_EXIT = 0;
         private const int CLOSE_PROGRAM_TIMER_VALUE = 3000;
@@ -25,11 +26,11 @@ namespace GameOfWar
                 //replace integers with consts representing menu options.
                 switch (menuChoice)
                 {
-                    case 1:
+                    case START_GAME:
                         //Play the game
                         Game newGame = new Game();
                         break;
-                    case 2:
+                    case EXIT:
                         //Delay the closing of the console so the end user can see the farewell message.
                         closeAppTimer.Elapsed += CloseAppTimer_Elapsed;
                         closeAppTimer.Start();

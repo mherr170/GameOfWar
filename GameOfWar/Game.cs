@@ -13,6 +13,7 @@ namespace GameOfWar
         private const string QUEEN = "Queen";
         private const string KING = "King";
         private const string ACE = "Ace";
+
         private const int CARDS_NEEDED_FOR_NORMAL_WAR = 5;
 
         public Game()
@@ -31,10 +32,11 @@ namespace GameOfWar
 
         private void StartGame(Player humanPlayer, Player computerPlayer)
         {
+            int gameState = (int)GameState.GAME_CONTINUES;
+
             PrintGameBeginning();
 
-            //while neither player has 0 cards...
-            while (humanPlayer.playerCards.Count > 0 && computerPlayer.playerCards.Count > 0)
+            while (gameState == (int)GameState.GAME_CONTINUES)
             {
                 PrintGameMenu();
 
@@ -43,7 +45,7 @@ namespace GameOfWar
                 switch (menuChoice)
                 {
                     case 1:
-                        PlayCard(humanPlayer, computerPlayer);
+                        gameState = PlayCard(humanPlayer, computerPlayer);
                         break;
                     case 2:
                         PrintRemainingHumanCards(humanPlayer);
@@ -57,23 +59,31 @@ namespace GameOfWar
 
             }
 
-            //If we are outside the loop, one of the players has 0 cards remaining, or the LOSS condition has been met via multiple wars.
-            if (humanPlayer.playerCards.Count == 0)
+
+            switch (gameState)
             {
-                //The computer has won.
-                PrintHumanLoss();  
+                case (int)GameState.HUMAN_LOSS:
+                    PrintHumanLoss();
+                    break;
+                case (int)GameState.COMPUTER_LOSS:
+                    PrintHumanWin();
+                    break;
+                case (int)GameState.WARFORFEIT_HUMAN:
+                    PrintHumanWarForfeit();
+                    break;
+                case (int)GameState.WARFORFEIT_COMPUTER:
+                    PrintComputerWarForfeit();
+                    break;
             }
-            else if (computerPlayer.playerCards.Count == 0)
-            {
-                //the human has won.
-                PrintHumanWin();
-            }
-            //Handle Loss from running out of cards during WAR.
 
         }
 
-        private void PlayCard(Player humanPlayer, Player computerPlayer)
+        private int PlayCard(Player humanPlayer, Player computerPlayer)
         {
+            //If either player has run out of cards during a WAR, signal that the game has been forfeit.
+            bool humanWarForfeit = false;
+            bool computerWarForfeit = false;
+
             PrintCurrentMove(humanPlayer, computerPlayer);
 
             //EnterWarPhase(humanPlayer, computerPlayer);
@@ -81,7 +91,7 @@ namespace GameOfWar
             //The Players have played two cards with the same value.  Begin "WAR" sequence.
             if (humanPlayer.playerCards.First().CardValue == computerPlayer.playerCards.First().CardValue)
             {
-                 EnterWarPhase(humanPlayer, computerPlayer);
+                EnterWarPhase(humanPlayer, computerPlayer, ref humanWarForfeit, ref computerWarForfeit);
             }
             else if (humanPlayer.playerCards.First().CardValue > computerPlayer.playerCards.First().CardValue)
             {
@@ -92,13 +102,65 @@ namespace GameOfWar
             {
                 ComputerWinsRound(humanPlayer, computerPlayer);
             }
+
+            //check if the game has ended
+            int gameState =  CheckGameEndingConditions(humanPlayer, computerPlayer, humanWarForfeit, computerWarForfeit);
+
+            return gameState;
            
         }
 
-        private void EnterWarPhase(Player humanPlayer, Player computerPlayer)
+        private int CheckGameEndingConditions(Player humanPlayer, Player computerPlayer, bool humanWarForfeit, bool computerWarForfeit)
         {
-            //WAR Logic
+            if(isHumanOutOfCards(humanPlayer))
+            {
+                return (int)GameState.HUMAN_LOSS;
+            }
+            else if (isComputerOutOfCards(computerPlayer))
+            {
+                return (int)GameState.COMPUTER_LOSS;
+            }
+            else if (humanWarForfeit)
+            {
+                return (int)GameState.WARFORFEIT_HUMAN;
+            }
+            else if (computerWarForfeit)
+            {
+                return (int)GameState.WARFORFEIT_COMPUTER;
+            }
+            else
+            {
+                return (int)GameState.GAME_CONTINUES;
+            }
 
+        }
+
+        private bool isHumanOutOfCards(Player humanPlayer)
+        {
+            if (humanPlayer.playerCards.Count == 0)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+        private bool isComputerOutOfCards(Player computerPlayer)
+        {
+            if (computerPlayer.playerCards.Count == 0)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+        private void EnterWarPhase(Player humanPlayer, Player computerPlayer, ref bool humanWarForfeit, ref bool computerWarForfeit)
+        {
             //Create lists to hold the cards played during WAR phase.
             List<Card> humanWarCards = new List<Card>();
             List<Card> computerWarCards = new List<Card>();
@@ -114,11 +176,20 @@ namespace GameOfWar
                 else
                 {
                     //One of the players did not have the cards to fight the war.  Trigger loss condition
-                    //Bubble up loss condition here somehow.
                     isWarOngoing = false;
+                    
+                    if (humanPlayer.playerCards.Count < 5)
+                    {
+                        humanWarForfeit = true;
+                    }
+                    else if (computerPlayer.playerCards.Count < 5)
+                    {
+                        computerWarForfeit = true;
+                    }
                 }
             }
             while (isWarOngoing);
+
         }
 
         private void FiveCardWar(Player humanPlayer, Player computerPlayer, List<Card> humanWarCards, List<Card> computerWarCards, ref bool isWarOngoing)
@@ -272,6 +343,23 @@ namespace GameOfWar
         }
 
         #region PRINT FUNCTIONS
+
+        private void PrintHumanWarForfeit()
+        {
+            Console.WriteLine("");
+            Console.WriteLine("You have run out of cards during a WAR!  You are unable to continue fighting, and have lost the game!");
+            Console.WriteLine("");
+        }
+
+        private void PrintComputerWarForfeit()
+        {
+            Console.WriteLine("");
+            Console.WriteLine("The computer has run out of cards during a WAR!  It is unable to continue fighting, and has lost the game!");
+            Console.WriteLine("");
+            Console.WriteLine("Congratulations, you are victorious!");
+            Console.WriteLine("");
+        }
+
 
         private void PrintHumanLoss()
         {
