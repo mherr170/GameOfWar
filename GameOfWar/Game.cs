@@ -1,20 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.CompilerServices;
-using System.Text;
 
 namespace GameOfWar
 {
-    class Game
+    public class Game
     {
         private const int FIRST_CARD_IN_DECK = 0;
-        private const string JACK = "Jack";
-        private const string QUEEN = "Queen";
-        private const string KING = "King";
-        private const string ACE = "Ace";
-
         private const int CARDS_NEEDED_FOR_NORMAL_WAR = 5;
+        private const int PLAY_CARD = 1;
+        private const int PRINT_NUMBER_OF_REMAINING_CARDS = 2;
 
         public Game()
         {
@@ -43,10 +38,10 @@ namespace GameOfWar
 
                 switch (menuChoice)
                 {
-                    case 1:
+                    case PLAY_CARD:
                         gameState = PlayCard(humanPlayer, computerPlayer);
                         break;
-                    case 2:
+                    case PRINT_NUMBER_OF_REMAINING_CARDS:
                         PrintRemainingHumanCards(humanPlayer);
                         break;
                     default:
@@ -108,11 +103,11 @@ namespace GameOfWar
 
         private int CheckGameEndingConditions(Player humanPlayer, Player computerPlayer, bool humanWarForfeit, bool computerWarForfeit)
         {
-            if (isHumanOutOfCards(humanPlayer))
+            if (IsHumanOutOfCards(humanPlayer))
             {
                 return (int)GameState.HUMAN_LOSS;
             }
-            else if (isComputerOutOfCards(computerPlayer))
+            else if (IsComputerOutOfCards(computerPlayer))
             {
                 return (int)GameState.COMPUTER_LOSS;
             }
@@ -131,28 +126,14 @@ namespace GameOfWar
 
         }
 
-        private bool isHumanOutOfCards(Player humanPlayer)
+        private bool IsHumanOutOfCards(Player humanPlayer)
         {
-            if (humanPlayer.playerCards.Count == 0)
-            {
-                return true;
-            }
-            else
-            {
-                return false;
-            }
+            return (humanPlayer.playerCards.Count == 0);
         }
 
-        private bool isComputerOutOfCards(Player computerPlayer)
+        private bool IsComputerOutOfCards(Player computerPlayer)
         {
-            if (computerPlayer.playerCards.Count == 0)
-            {
-                return true;
-            }
-            else
-            {
-                return false;
-            }
+            return (computerPlayer.playerCards.Count == 0);
         }
 
         private void EnterWarPhase(Player humanPlayer, Player computerPlayer, ref bool humanWarForfeit, ref bool computerWarForfeit)
@@ -190,8 +171,67 @@ namespace GameOfWar
 
         private void FiveCardWar(Player humanPlayer, Player computerPlayer, List<Card> humanWarCards, List<Card> computerWarCards, ref bool isWarOngoing)
         {
-            #region WAR LIST LOGIC
+            //Take the cards at stake from each player during War and store them in the War Card list.
+            PopulateWarCards(humanPlayer, computerPlayer, humanWarCards, computerWarCards);
 
+            //Compare the last card in each player's war list.
+            PrintWarFinalCard(humanWarCards.Last(), computerWarCards.Last());
+
+            //War has happened more than one time in a row.
+            if (humanWarCards.Last().CardValue == computerWarCards.Last().CardValue)
+            {
+                Console.Write("The current War has ended in a TIE!  Another War ensues!");
+            }
+            else if (humanWarCards.Last().CardValue > computerWarCards.Last().CardValue)
+            {
+                HumanWinsWar(humanPlayer, humanWarCards, computerWarCards, ref isWarOngoing);
+            }
+            else  //The Computer has won.
+            {
+                ComputerWinsWar(computerPlayer, humanWarCards, computerWarCards, ref isWarOngoing);
+            }
+        }
+
+        private void HumanWinsWar(Player humanPlayer, List<Card> humanWarCards, List<Card> computerWarCards, ref bool isWarOngoing)
+        {
+            isWarOngoing = false;
+
+            //The Human has won the war.  Add both war card lists to the back of the human deck.
+            humanPlayer.playerCards.AddRange(humanWarCards);
+            humanPlayer.playerCards.AddRange(computerWarCards);
+
+            Console.WriteLine("");
+            Console.WriteLine("You have won the WAR!");
+
+            foreach (Card computerWarCard in computerWarCards)
+            {
+                Console.WriteLine("You have taken the " + TranslateNumberToFaceCard(computerWarCard.CardValue) + " of " + computerWarCard.CardSuit + " from the computer!");
+            }
+
+            Console.WriteLine("");
+        }
+
+        private void ComputerWinsWar(Player computerPlayer, List<Card> humanWarCards, List<Card> computerWarCards, ref bool isWarOngoing)
+        {
+            isWarOngoing = false;
+
+            //The Computer has won the war.   Add both war card lists to the back of the computer deck.
+            computerPlayer.playerCards.AddRange(computerWarCards);
+            computerPlayer.playerCards.AddRange(humanWarCards);
+
+            Console.WriteLine("");
+            Console.WriteLine("The computer has won the WAR!");
+
+            foreach (Card humanWarCard in humanWarCards)
+            {
+                Console.WriteLine("The computer has taken the " + TranslateNumberToFaceCard(humanWarCard.CardValue) + " of " + humanWarCard.CardSuit + " from your deck!");
+            }
+
+            Console.WriteLine("");
+        }
+
+        private void PopulateWarCards(Player humanPlayer, Player computerPlayer, List<Card> humanWarCards, List<Card> computerWarCards)
+        {
             //Add the card the human already played, the additional three cards played for WAR, and the 5th played card that determines the war result.
             humanWarCards.AddRange(humanPlayer.playerCards.GetRange(0, CARDS_NEEDED_FOR_NORMAL_WAR));
 
@@ -202,53 +242,6 @@ namespace GameOfWar
             computerWarCards.AddRange(computerPlayer.playerCards.GetRange(0, CARDS_NEEDED_FOR_NORMAL_WAR));
 
             computerPlayer.playerCards.RemoveRange(0, CARDS_NEEDED_FOR_NORMAL_WAR);
-
-            #endregion
-
-            //Compare the last card in each player's war list.
-            PrintWarFinalCard(humanWarCards.Last(), computerWarCards.Last());
-
-            //War has happened more than one time in a row.
-            if (humanWarCards.Last().CardValue == computerWarCards.Last().CardValue)
-            {
-                Console.Write("Two or more Wars in a row");
-            }
-            else if (humanWarCards.Last().CardValue > computerWarCards.Last().CardValue)
-            {
-                isWarOngoing = false;
-
-                //The Human has won war.  Add both war card lists to the back of the human deck.
-                humanPlayer.playerCards.AddRange(humanWarCards);
-                humanPlayer.playerCards.AddRange(computerWarCards);
-
-                Console.WriteLine("");
-                Console.WriteLine("You have won the WAR!");
-
-                foreach (Card computerWarCard in computerWarCards)
-                {
-                    Console.WriteLine("You have taken the " + TranslateNumberToFaceCard(computerWarCard.CardValue) + " of " + computerWarCard.CardSuit + " from the computer!");
-                }
-
-                Console.WriteLine("");
-
-            }
-            else  //The Computer has won.
-            {
-                isWarOngoing = false;
-
-                computerPlayer.playerCards.AddRange(computerWarCards);
-                computerPlayer.playerCards.AddRange(humanWarCards);
-
-                Console.WriteLine("");
-                Console.WriteLine("The computer has won the WAR!");
-
-                foreach (Card humanWarCard in humanWarCards)
-                {
-                    Console.WriteLine("The computer has taken the " + TranslateNumberToFaceCard(humanWarCard.CardValue) + " of " + humanWarCard.CardSuit + " from your deck!");
-                }
-
-                Console.WriteLine("");
-            }
         }
 
         private void ComputerWinsRound(Player humanPlayer, Player computerPlayer)
@@ -288,13 +281,13 @@ namespace GameOfWar
             switch (cardValue)
             {
                 case (int)CardValues.Jack:
-                    return JACK;
+                    return CardValues.Jack.ToString();
                 case (int)CardValues.Queen:
-                    return QUEEN;
+                    return CardValues.Queen.ToString();
                 case (int)CardValues.King:
-                    return KING;
+                    return CardValues.King.ToString();
                 case (int)CardValues.Ace:
-                    return ACE;
+                    return CardValues.Ace.ToString();
                 default:
                     return cardValue.ToString();
             }
@@ -307,7 +300,7 @@ namespace GameOfWar
             int num;
 
             //Loop decrements by two because one iteration deals out two cards.
-            for (int cardsRemainingInDeck = 52; cardsRemainingInDeck > 0; cardsRemainingInDeck -= 2)
+            for (int cardsRemainingInDeck = gameDeck.deckOfCards.Count; cardsRemainingInDeck > 0; cardsRemainingInDeck -= 2)
             {
                 //Generate a random number from 0 to one less than the amount of cards remaining in the deck.
                 //It is one less because Random.Next function will return a number from 0 up to but not including the specified maximum.
@@ -327,7 +320,6 @@ namespace GameOfWar
 
                 //Remove the card given to the computer player from the deck.
                 gameDeck.deckOfCards.RemoveAt(num);
-
             }
         }
 
@@ -371,7 +363,7 @@ namespace GameOfWar
         {
             Console.WriteLine("");
             Console.WriteLine("You won this round!");
-            Console.WriteLine("You have placed the " + TranslateNumberToFaceCard(computerPlayer.playerCards.First().CardValue) + " of " + computerPlayer.playerCards.First().CardSuit + " into the bottom of your hand.");
+            Console.WriteLine("You have placed your card and the " + TranslateNumberToFaceCard(computerPlayer.playerCards.First().CardValue) + " of " + computerPlayer.playerCards.First().CardSuit + " into the bottom of your hand.");
             Console.WriteLine("");
         }
 
@@ -379,7 +371,7 @@ namespace GameOfWar
         {
             Console.WriteLine("");
             Console.WriteLine("You lost this round!");
-            Console.WriteLine("The computer has taken the " + TranslateNumberToFaceCard(humanPlayer.playerCards.First().CardValue) + " of " + humanPlayer.playerCards.First().CardSuit + " and placed it into the bottom of its hand.");
+            Console.WriteLine("The computer has taken its card and the " + TranslateNumberToFaceCard(humanPlayer.playerCards.First().CardValue) + " of " + humanPlayer.playerCards.First().CardSuit + " and placed it into the bottom of its hand.");
             Console.WriteLine("");
         }
 
@@ -409,11 +401,11 @@ namespace GameOfWar
             PrintWarFlavorText();
 
             Console.WriteLine("");
-            Console.WriteLine("Your final war card is " + TranslateNumberToFaceCard(humanWarCard.CardValue) + " of " + humanWarCard.CardSuit + "!");
+            Console.WriteLine("Your final war card is the " + TranslateNumberToFaceCard(humanWarCard.CardValue) + " of " + humanWarCard.CardSuit + "!");
             Console.WriteLine("");
 
             Console.WriteLine("");
-            Console.WriteLine("The computer's war card is " + TranslateNumberToFaceCard(computerWarCard.CardValue) + " of " + computerWarCard.CardSuit + "!");
+            Console.WriteLine("The computer's war card is the " + TranslateNumberToFaceCard(computerWarCard.CardValue) + " of " + computerWarCard.CardSuit + "!");
             Console.WriteLine("");
         }
 

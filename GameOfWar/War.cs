@@ -3,7 +3,7 @@ using System.Timers;
 
 namespace GameOfWar
 {
-    class War
+    public class War
     {
         private const int START_GAME = 1;
         private const int EXIT = 2;

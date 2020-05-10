@@ -1,12 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
 
 namespace GameOfWar
 {
-    class Player
+    public class Player
     {
-        public List<Card> playerCards = new List<Card>(); // Should have 26 to begin
+        public List<Card> playerCards = new List<Card>();
 
         //Debugging purposes - ensure that the player has received a legitimate amount of cards.
         public void PrintPlayerHand()

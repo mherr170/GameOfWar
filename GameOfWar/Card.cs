@@ -1,11 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace GameOfWar
+﻿namespace GameOfWar
 {
     //The Card class represents a single playing card within a Deck.
-    class Card
+    public class Card
     {
         public string CardSuit { get; set; }
 

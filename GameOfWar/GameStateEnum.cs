@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace GameOfWar
+﻿namespace GameOfWar
 {
     public enum GameState
     {

@@ -1,12 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.CompilerServices;
-using System.Text;
 
 namespace GameOfWar
 {
-    class Deck
+    public class Deck
     {
         private const int numberOfCardsInDeck = 52;
 
@@ -14,15 +11,10 @@ namespace GameOfWar
 
         private const int numberOfCardsPerSuit = 13;
 
-        private const string HEARTS = "Hearts";
-        private const string DIAMONDS = "Diamonds";
-        private const string SPADES = "Spades";
-        private const string CLUBS = "Clubs";
+        private readonly List<string> cardSuits = new List<string>();
+        private readonly List<int> cardValuesPerSuit = new List<int>();
 
         public List<Card> deckOfCards = new List<Card>();
-
-        private List<String> cardSuits = new List<String>();
-        private List<int> cardValuesPerSuit = new List<int>();
 
         public Deck()
         {
@@ -38,10 +30,10 @@ namespace GameOfWar
 
         private void BuildSuitList()
         {
-            cardSuits.Add(HEARTS);
-            cardSuits.Add(DIAMONDS);
-            cardSuits.Add(SPADES);
-            cardSuits.Add(CLUBS);
+            cardSuits.Add(Suits.Hearts.ToString());
+            cardSuits.Add(Suits.Diamonds.ToString());
+            cardSuits.Add(Suits.Spades.ToString());
+            cardSuits.Add(Suits.Clubs.ToString());
         }
 
         private void BuildCardValueList()
