@@ -36,7 +36,13 @@ namespace GameOfWar.GameLogic
             {
                 PrintGameMenu();
 
-                int.TryParse(Console.ReadLine(), out int menuChoice);
+                //Recording the parse result regardless in the event that further action needs to be taken upon failure.
+                bool userInputParseSuccess = int.TryParse(Console.ReadLine(), out int menuChoice);
+
+                if (!userInputParseSuccess)
+                {
+                    menuChoice = 0;
+                }
 
                 switch (menuChoice)
                 {
@@ -157,11 +163,11 @@ namespace GameOfWar.GameLogic
                     //One of the players did not have the cards to fight the war.  Trigger loss condition
                     isWarOngoing = false;
 
-                    if (humanPlayer.PlayerCards.Count < 5)
+                    if (humanPlayer.PlayerCards.Count < CARDS_NEEDED_FOR_NORMAL_WAR)
                     {
                         humanWarForfeit = true;
                     }
-                    else if (computerPlayer.PlayerCards.Count < 5)
+                    else if (computerPlayer.PlayerCards.Count < CARDS_NEEDED_FOR_NORMAL_WAR)
                     {
                         computerWarForfeit = true;
                     }
