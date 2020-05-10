@@ -82,11 +82,11 @@ namespace GameOfWar.GameLogic
             PrintCurrentMove(humanPlayer, computerPlayer);
 
             //The Players have played two cards with the same value.  Begin "WAR" sequence.
-            if (humanPlayer.playerCards.First().CardValue == computerPlayer.playerCards.First().CardValue)
+            if (humanPlayer.PlayerCards.First().CardValue == computerPlayer.PlayerCards.First().CardValue)
             {
                 EnterWarPhase(humanPlayer, computerPlayer, ref humanWarForfeit, ref computerWarForfeit);
             }
-            else if (humanPlayer.playerCards.First().CardValue > computerPlayer.playerCards.First().CardValue)
+            else if (humanPlayer.PlayerCards.First().CardValue > computerPlayer.PlayerCards.First().CardValue)
             {
                 //Print what occurred in the round, and swap the cards between players.
                 HumanWinsRound(humanPlayer, computerPlayer);
@@ -130,12 +130,12 @@ namespace GameOfWar.GameLogic
 
         private bool IsHumanOutOfCards(Player humanPlayer)
         {
-            return (humanPlayer.playerCards.Count == 0);
+            return (humanPlayer.PlayerCards.Count == 0);
         }
 
         private bool IsComputerOutOfCards(Player computerPlayer)
         {
-            return (computerPlayer.playerCards.Count == 0);
+            return (computerPlayer.PlayerCards.Count == 0);
         }
 
         private void EnterWarPhase(Player humanPlayer, Player computerPlayer, ref bool humanWarForfeit, ref bool computerWarForfeit)
@@ -147,7 +147,7 @@ namespace GameOfWar.GameLogic
 
             do
             {
-                if (humanPlayer.playerCards.Count >= CARDS_NEEDED_FOR_NORMAL_WAR && computerPlayer.playerCards.Count >= CARDS_NEEDED_FOR_NORMAL_WAR)
+                if (humanPlayer.PlayerCards.Count >= CARDS_NEEDED_FOR_NORMAL_WAR && computerPlayer.PlayerCards.Count >= CARDS_NEEDED_FOR_NORMAL_WAR)
                 {
                     //Known problem, in the event of more than 1 consecutive war, another 5 cards are at stake instead of just another 4.
                     FiveCardWar(humanPlayer, computerPlayer, humanWarCards, computerWarCards, ref isWarOngoing);
@@ -157,11 +157,11 @@ namespace GameOfWar.GameLogic
                     //One of the players did not have the cards to fight the war.  Trigger loss condition
                     isWarOngoing = false;
 
-                    if (humanPlayer.playerCards.Count < 5)
+                    if (humanPlayer.PlayerCards.Count < 5)
                     {
                         humanWarForfeit = true;
                     }
-                    else if (computerPlayer.playerCards.Count < 5)
+                    else if (computerPlayer.PlayerCards.Count < 5)
                     {
                         computerWarForfeit = true;
                     }
@@ -199,8 +199,8 @@ namespace GameOfWar.GameLogic
             isWarOngoing = false;
 
             //The Human has won the war.  Add both war card lists to the back of the human deck.
-            humanPlayer.playerCards.AddRange(humanWarCards);
-            humanPlayer.playerCards.AddRange(computerWarCards);
+            humanPlayer.PlayerCards.AddRange(humanWarCards);
+            humanPlayer.PlayerCards.AddRange(computerWarCards);
 
             Console.WriteLine("");
             Console.WriteLine("You have won the WAR!");
@@ -218,8 +218,8 @@ namespace GameOfWar.GameLogic
             isWarOngoing = false;
 
             //The Computer has won the war.   Add both war card lists to the back of the computer deck.
-            computerPlayer.playerCards.AddRange(computerWarCards);
-            computerPlayer.playerCards.AddRange(humanWarCards);
+            computerPlayer.PlayerCards.AddRange(computerWarCards);
+            computerPlayer.PlayerCards.AddRange(humanWarCards);
 
             Console.WriteLine("");
             Console.WriteLine("The computer has won the WAR!");
@@ -235,15 +235,15 @@ namespace GameOfWar.GameLogic
         private void PopulateWarCards(Player humanPlayer, Player computerPlayer, List<Card> humanWarCards, List<Card> computerWarCards)
         {
             //Add the card the human already played, the additional three cards played for WAR, and the 5th played card that determines the war result.
-            humanWarCards.AddRange(humanPlayer.playerCards.GetRange(0, CARDS_NEEDED_FOR_NORMAL_WAR));
+            humanWarCards.AddRange(humanPlayer.PlayerCards.GetRange(0, CARDS_NEEDED_FOR_NORMAL_WAR));
 
             //Remove the same 5 cards from the front of the human's deck.
-            humanPlayer.playerCards.RemoveRange(0, CARDS_NEEDED_FOR_NORMAL_WAR);
+            humanPlayer.PlayerCards.RemoveRange(0, CARDS_NEEDED_FOR_NORMAL_WAR);
 
             //Same for the computer player.
-            computerWarCards.AddRange(computerPlayer.playerCards.GetRange(0, CARDS_NEEDED_FOR_NORMAL_WAR));
+            computerWarCards.AddRange(computerPlayer.PlayerCards.GetRange(0, CARDS_NEEDED_FOR_NORMAL_WAR));
 
-            computerPlayer.playerCards.RemoveRange(0, CARDS_NEEDED_FOR_NORMAL_WAR);
+            computerPlayer.PlayerCards.RemoveRange(0, CARDS_NEEDED_FOR_NORMAL_WAR);
         }
 
         private void ComputerWinsRound(Player humanPlayer, Player computerPlayer)
@@ -251,15 +251,15 @@ namespace GameOfWar.GameLogic
             PrintRoundWinComputer(humanPlayer);
 
             //The computer gains a card.  Place it into the back of the computer deck.
-            computerPlayer.playerCards.Add(humanPlayer.playerCards.First());
+            computerPlayer.PlayerCards.Add(humanPlayer.PlayerCards.First());
 
             //Move the winning played card that was played by the computer to the back of the deck.
-            Card winningCard = computerPlayer.playerCards.First();
-            computerPlayer.playerCards.RemoveAt(FIRST_CARD_IN_DECK);
-            computerPlayer.playerCards.Add(winningCard);
+            Card winningCard = computerPlayer.PlayerCards.First();
+            computerPlayer.PlayerCards.RemoveAt(FIRST_CARD_IN_DECK);
+            computerPlayer.PlayerCards.Add(winningCard);
 
             //Remove the losing card that the human played from the huamn's deck.
-            humanPlayer.playerCards.RemoveAt(FIRST_CARD_IN_DECK);
+            humanPlayer.PlayerCards.RemoveAt(FIRST_CARD_IN_DECK);
         }
 
         private void HumanWinsRound(Player humanPlayer, Player computerPlayer)
@@ -267,15 +267,15 @@ namespace GameOfWar.GameLogic
             PrintRoundWinHuman(computerPlayer);
 
             //The human gains a card.  Place it into the back of the human deck.
-            humanPlayer.playerCards.Add(computerPlayer.playerCards.First());
+            humanPlayer.PlayerCards.Add(computerPlayer.PlayerCards.First());
 
             //Move the winning played card that was played by the human to the back of the deck.
-            Card winningCard = humanPlayer.playerCards.First();
-            humanPlayer.playerCards.RemoveAt(FIRST_CARD_IN_DECK);
-            humanPlayer.playerCards.Add(winningCard);
+            Card winningCard = humanPlayer.PlayerCards.First();
+            humanPlayer.PlayerCards.RemoveAt(FIRST_CARD_IN_DECK);
+            humanPlayer.PlayerCards.Add(winningCard);
 
             //Remove the losing card that the computer played from the computer's deck.
-            computerPlayer.playerCards.RemoveAt(FIRST_CARD_IN_DECK);
+            computerPlayer.PlayerCards.RemoveAt(FIRST_CARD_IN_DECK);
         }
 
         private string TranslateNumberToFaceCard(int cardValue)
@@ -302,26 +302,26 @@ namespace GameOfWar.GameLogic
             int num;
 
             //Loop decrements by two because one iteration deals out two cards.
-            for (int cardsRemainingInDeck = gameDeck.deckOfCards.Count; cardsRemainingInDeck > 0; cardsRemainingInDeck -= 2)
+            for (int cardsRemainingInDeck = gameDeck.DeckOfCards.Count; cardsRemainingInDeck > 0; cardsRemainingInDeck -= 2)
             {
                 //Generate a random number from 0 to one less than the amount of cards remaining in the deck.
                 //It is one less because Random.Next function will return a number from 0 up to but not including the specified maximum.
                 num = r.Next(cardsRemainingInDeck - 1);
 
                 //Take that random number, and assign the card that associates with it to the Human Player.
-                humanPlayer.playerCards.Add(gameDeck.deckOfCards[num]);
+                humanPlayer.PlayerCards.Add(gameDeck.DeckOfCards[num]);
 
                 //Remove the card you just gave to the Human Player from the gameDeck
-                gameDeck.deckOfCards.RemoveAt(num);
+                gameDeck.DeckOfCards.RemoveAt(num);
 
                 //Generate Random number from 0 to 2 less than the cards remaining, because one card has already been removed and given it to the Human.
                 num = r.Next(cardsRemainingInDeck - 2);
 
                 //Assign the next card to the computer player.
-                computerPlayer.playerCards.Add(gameDeck.deckOfCards[num]);
+                computerPlayer.PlayerCards.Add(gameDeck.DeckOfCards[num]);
 
                 //Remove the card given to the computer player from the deck.
-                gameDeck.deckOfCards.RemoveAt(num);
+                gameDeck.DeckOfCards.RemoveAt(num);
             }
         }
 
@@ -365,7 +365,7 @@ namespace GameOfWar.GameLogic
         {
             Console.WriteLine("");
             Console.WriteLine("You won this round!");
-            Console.WriteLine("You have placed your card and the " + TranslateNumberToFaceCard(computerPlayer.playerCards.First().CardValue) + " of " + computerPlayer.playerCards.First().CardSuit + " into the bottom of your hand.");
+            Console.WriteLine("You have placed your card and the " + TranslateNumberToFaceCard(computerPlayer.PlayerCards.First().CardValue) + " of " + computerPlayer.PlayerCards.First().CardSuit + " into the bottom of your hand.");
             Console.WriteLine("");
         }
 
@@ -373,7 +373,7 @@ namespace GameOfWar.GameLogic
         {
             Console.WriteLine("");
             Console.WriteLine("You lost this round!");
-            Console.WriteLine("The computer has taken its card and the " + TranslateNumberToFaceCard(humanPlayer.playerCards.First().CardValue) + " of " + humanPlayer.playerCards.First().CardSuit + " and placed it into the bottom of its hand.");
+            Console.WriteLine("The computer has taken its card and the " + TranslateNumberToFaceCard(humanPlayer.PlayerCards.First().CardValue) + " of " + humanPlayer.PlayerCards.First().CardSuit + " and placed it into the bottom of its hand.");
             Console.WriteLine("");
         }
 
@@ -390,11 +390,11 @@ namespace GameOfWar.GameLogic
         private void PrintCurrentMove(Player humanPlayer, Player computerPlayer)
         {
             Console.WriteLine("");
-            Console.WriteLine("You play the " + TranslateNumberToFaceCard(humanPlayer.playerCards.First().CardValue) + " of " + humanPlayer.playerCards.First().CardSuit + "!");
+            Console.WriteLine("You play the " + TranslateNumberToFaceCard(humanPlayer.PlayerCards.First().CardValue) + " of " + humanPlayer.PlayerCards.First().CardSuit + "!");
             Console.WriteLine("");
 
             Console.WriteLine("");
-            Console.WriteLine("The computer plays the " + TranslateNumberToFaceCard(computerPlayer.playerCards.First().CardValue) + " of " + computerPlayer.playerCards.First().CardSuit + "!");
+            Console.WriteLine("The computer plays the " + TranslateNumberToFaceCard(computerPlayer.PlayerCards.First().CardValue) + " of " + computerPlayer.PlayerCards.First().CardSuit + "!");
             Console.WriteLine("");
         }
 
@@ -433,7 +433,7 @@ namespace GameOfWar.GameLogic
         private void PrintRemainingHumanCards(Player humanPlayer)
         {
             Console.WriteLine("");
-            Console.WriteLine("You have " + humanPlayer.playerCards.Count + " cards left in your hand.");
+            Console.WriteLine("You have " + humanPlayer.PlayerCards.Count + " cards left in your hand.");
             Console.WriteLine("");
         }
         #endregion

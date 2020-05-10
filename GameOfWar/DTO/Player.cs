@@ -5,16 +5,21 @@ namespace GameOfWar.DTO
 {
     public class Player
     {
-        public List<Card> playerCards = new List<Card>();
+        public List<Card> PlayerCards { get; private set; }
+
+        public Player()
+        {
+            PlayerCards = new List<Card>();
+        }
 
         //Debugging purposes - ensure that the player has received a legitimate amount of cards.
         public void PrintPlayerHand()
         {
-            Console.WriteLine("The player's deck contains " + playerCards.Count + " cards.");
+            Console.WriteLine("The player's deck contains " + PlayerCards.Count + " cards.");
 
-            for (int i = 0; i < playerCards.Count; i++)
+            for (int i = 0; i < PlayerCards.Count; i++)
             {
-                Console.WriteLine("The " + playerCards[i].CardValue + " of " + playerCards[i].CardSuit);
+                Console.WriteLine("The " + PlayerCards[i].CardValue + " of " + PlayerCards[i].CardSuit);
             }
         }
 

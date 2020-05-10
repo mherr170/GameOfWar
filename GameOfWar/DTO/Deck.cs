@@ -15,10 +15,12 @@ namespace GameOfWar.DTO
         private readonly List<string> cardSuits = new List<string>();
         private readonly List<int> cardValuesPerSuit = new List<int>();
 
-        public List<Card> deckOfCards = new List<Card>();
+        public List<Card> DeckOfCards { get; private set; }
 
         public Deck()
         {
+            DeckOfCards = new List<Card>();
+
             //Build card suit list
             BuildSuitList();
 
@@ -63,7 +65,7 @@ namespace GameOfWar.DTO
                 for (int cardCount = 0; cardCount < numberOfCardsPerSuit; cardCount++)
                 {
                     //Create the Card object inline, and add it to the deck.
-                    deckOfCards.Add(new Card(cardSuits[suit], cardValuesPerSuit[cardCount]));
+                    DeckOfCards.Add(new Card(cardSuits[suit], cardValuesPerSuit[cardCount]));
                 }
             }
         }
@@ -74,12 +76,12 @@ namespace GameOfWar.DTO
             Console.WriteLine("");
             Console.WriteLine("A normal deck has " + numberOfCardsInDeck + " cards.");
             Console.WriteLine("");
-            Console.WriteLine("This game deck has " + deckOfCards.Count + " cards.");
+            Console.WriteLine("This game deck has " + DeckOfCards.Count + " cards.");
             Console.WriteLine("");
 
             for (int cardCount = 0; cardCount < numberOfCardsInDeck; cardCount++)
             {
-                Console.WriteLine(deckOfCards[cardCount].CardValue + " of " + deckOfCards[cardCount].CardSuit);
+                Console.WriteLine(DeckOfCards[cardCount].CardValue + " of " + DeckOfCards[cardCount].CardSuit);
             }
         }
 
