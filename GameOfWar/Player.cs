@@ -6,16 +6,7 @@ namespace GameOfWar
 {
     class Player
     {
-        public bool isComputerPlayer = false;
-
-        private string playerName;
-
         public List<Card> playerCards = new List<Card>(); // Should have 26 to begin
-
-        public Player()
-        {
-
-        }
 
         //Debugging purposes - ensure that the player has received a legitimate amount of cards.
         public void PrintPlayerHand()

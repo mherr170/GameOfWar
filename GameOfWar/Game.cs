@@ -22,7 +22,6 @@ namespace GameOfWar
 
             Player humanPlayer = new Player();
             Player computerPlayer = new Player();
-            computerPlayer.isComputerPlayer = true;
 
             ShuffleAndDistributeCards(gameDeck, humanPlayer, computerPlayer);
 
@@ -59,7 +58,6 @@ namespace GameOfWar
 
             }
 
-
             switch (gameState)
             {
                 case (int)GameState.HUMAN_LOSS:
@@ -85,8 +83,6 @@ namespace GameOfWar
             bool computerWarForfeit = false;
 
             PrintCurrentMove(humanPlayer, computerPlayer);
-
-            //EnterWarPhase(humanPlayer, computerPlayer);
 
             //The Players have played two cards with the same value.  Begin "WAR" sequence.
             if (humanPlayer.playerCards.First().CardValue == computerPlayer.playerCards.First().CardValue)
@@ -320,8 +316,6 @@ namespace GameOfWar
                 //Take that random number, and assign the card that associates with it to the Human Player.
                 humanPlayer.playerCards.Add(gameDeck.deckOfCards[num]);
 
-                //Console.WriteLine("The " + gameDeck.deckOfCards[num].CardValue + " of " + gameDeck.deckOfCards[num].CardSuit + " has been given to the Human Player.");
-
                 //Remove the card you just gave to the Human Player from the gameDeck
                 gameDeck.deckOfCards.RemoveAt(num);
 
@@ -331,15 +325,10 @@ namespace GameOfWar
                 //Assign the next card to the computer player.
                 computerPlayer.playerCards.Add(gameDeck.deckOfCards[num]);
 
-                //Console.WriteLine("The " + gameDeck.deckOfCards[num].CardValue + " of " + gameDeck.deckOfCards[num].CardSuit + " has been given to the Computer Player.");
-
                 //Remove the card given to the computer player from the deck.
                 gameDeck.deckOfCards.RemoveAt(num);
 
             }
-
-            //humanPlayer.PrintPlayerHand();
-            //computerPlayer.PrintPlayerHand();
         }
 
         #region PRINT FUNCTIONS
