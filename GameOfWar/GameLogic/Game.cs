@@ -325,6 +325,7 @@ namespace GameOfWar.GameLogic
             }
         }
 
+        //A future improvement should be to move the print functionality out of the game logic class.
         #region PRINT FUNCTIONS
 
         private void PrintHumanWarForfeit()
