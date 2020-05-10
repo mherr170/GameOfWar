@@ -104,15 +104,15 @@ namespace GameOfWar
             }
 
             //check if the game has ended
-            int gameState =  CheckGameEndingConditions(humanPlayer, computerPlayer, humanWarForfeit, computerWarForfeit);
+            int gameState = CheckGameEndingConditions(humanPlayer, computerPlayer, humanWarForfeit, computerWarForfeit);
 
             return gameState;
-           
+
         }
 
         private int CheckGameEndingConditions(Player humanPlayer, Player computerPlayer, bool humanWarForfeit, bool computerWarForfeit)
         {
-            if(isHumanOutOfCards(humanPlayer))
+            if (isHumanOutOfCards(humanPlayer))
             {
                 return (int)GameState.HUMAN_LOSS;
             }
@@ -169,7 +169,7 @@ namespace GameOfWar
             do
             {
                 if (humanPlayer.playerCards.Count >= CARDS_NEEDED_FOR_NORMAL_WAR && computerPlayer.playerCards.Count >= CARDS_NEEDED_FOR_NORMAL_WAR)
-                { 
+                {
                     //Known problem, in the event of more than 1 consecutive war, another 5 cards are at stake instead of just another 4.
                     FiveCardWar(humanPlayer, computerPlayer, humanWarCards, computerWarCards, ref isWarOngoing);
                 }
@@ -177,7 +177,7 @@ namespace GameOfWar
                 {
                     //One of the players did not have the cards to fight the war.  Trigger loss condition
                     isWarOngoing = false;
-                    
+
                     if (humanPlayer.playerCards.Count < 5)
                     {
                         humanWarForfeit = true;
@@ -454,6 +454,6 @@ namespace GameOfWar
             Console.WriteLine("");
         }
         #endregion
-        
+
     }
 }

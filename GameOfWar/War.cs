@@ -20,9 +20,9 @@ namespace GameOfWar
             {
                 PrintMainMenu();
 
-                //No need to evaluate the TryParse result, menuChoice will handle it in the switch statement.
+                //No need to evaluate the TryParse result, menuChoice will handle it in the switch statement in the default case.
                 int.TryParse(Console.ReadLine(), out menuChoice);
-             
+
                 //replace integers with consts representing menu options.
                 switch (menuChoice)
                 {
@@ -38,7 +38,7 @@ namespace GameOfWar
                         Console.WriteLine();
                         Console.WriteLine("Thank you for playing the Game Of War!");
                         Console.WriteLine();
-                        
+
                         Console.ReadKey();
                         break;
                     default:
@@ -47,7 +47,7 @@ namespace GameOfWar
                         Console.WriteLine();
                         break;
                 }
-            }       
+            }
         }
 
         private static void PrintMainMenu()

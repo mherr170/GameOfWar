@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 
 namespace GameOfWar
-{ 
+{
     class Player
     {
         public bool isComputerPlayer = false;
