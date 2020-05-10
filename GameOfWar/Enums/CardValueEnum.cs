@@ -1,4 +1,4 @@
-﻿namespace GameOfWar
+﻿namespace GameOfWar.Enums
 {
     public enum CardValues
     {

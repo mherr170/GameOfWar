@@ -1,4 +1,4 @@
-﻿namespace GameOfWar
+﻿namespace GameOfWar.DTO
 {
     //The Card class represents a single playing card within a Deck.
     public class Card

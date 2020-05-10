@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Timers;
+using GameOfWar.GameLogic;
 
 namespace GameOfWar
 {
@@ -10,18 +11,22 @@ namespace GameOfWar
         private const int SUCCESSFUL_USER_EXIT = 0;
         private const int CLOSE_PROGRAM_TIMER_VALUE = 3000;
 
-        static void Main(string[] args)
+        static void Main()
         {
-            int menuChoice = 0;
-
-            Timer closeAppTimer = new Timer(CLOSE_PROGRAM_TIMER_VALUE);
+            int menuChoice = 0;          
 
             while (menuChoice != EXIT)
             {
                 PrintMainMenu();
 
-                //No need to evaluate the TryParse result, menuChoice will handle it in the switch statement in the default case.
-                int.TryParse(Console.ReadLine(), out menuChoice);
+                //Not explicitly necessary to evaluate the TryParse result due the the out parameter.
+                //However, recording the parse result regardless in the event that further action needs to be taken upon failure.
+                bool userInputParseSuccess = int.TryParse(Console.ReadLine(), out menuChoice);
+                
+                if (!userInputParseSuccess) 
+                {
+                    menuChoice = 0;
+                }
 
                 //replace integers with consts representing menu options.
                 switch (menuChoice)
@@ -31,15 +36,7 @@ namespace GameOfWar
                         Game newGame = new Game();
                         break;
                     case EXIT:
-                        //Delay the closing of the console so the end user can see the farewell message.
-                        closeAppTimer.Elapsed += CloseAppTimer_Elapsed;
-                        closeAppTimer.Start();
-
-                        Console.WriteLine();
-                        Console.WriteLine("Thank you for playing the Game Of War!");
-                        Console.WriteLine();
-
-                        Console.ReadKey();
+                        ExitGame();
                         break;
                     default:
                         Console.WriteLine();
@@ -62,6 +59,21 @@ namespace GameOfWar
 
             Console.WriteLine("1) Start a new game.");
             Console.WriteLine("2) Exit the game.");
+        }
+
+        private static void ExitGame()
+        {
+            Timer closeAppTimer = new Timer(CLOSE_PROGRAM_TIMER_VALUE);
+
+            //Delay the closing of the console so the end user can see the farewell message.
+            closeAppTimer.Elapsed += CloseAppTimer_Elapsed;
+            closeAppTimer.Start();
+
+            Console.WriteLine();
+            Console.WriteLine("Thank you for playing the Game Of War!");
+            Console.WriteLine();
+
+            Console.ReadKey();
         }
 
         private static void CloseAppTimer_Elapsed(object sender, ElapsedEventArgs e)

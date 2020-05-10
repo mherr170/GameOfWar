@@ -1,7 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using GameOfWar.Enums;
 
-namespace GameOfWar
+namespace GameOfWar.DTO
 {
     public class Deck
     {

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace GameOfWar
+namespace GameOfWar.DTO
 {
     public class Player
     {

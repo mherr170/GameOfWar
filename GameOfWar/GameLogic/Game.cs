@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using GameOfWar.Enums;
+using GameOfWar.DTO;
 
-namespace GameOfWar
+namespace GameOfWar.GameLogic
 {
     public class Game
     {
