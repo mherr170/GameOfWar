@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using GameOfWar.Enums;
 using GameOfWar.DTO;
+using GameOfWar.PrintLogic.PrintStatic;
 
 namespace GameOfWar.GameLogic
 {
@@ -30,11 +31,11 @@ namespace GameOfWar.GameLogic
         {
             int gameState = (int)GameState.GAME_CONTINUES;
 
-            PrintGameBeginning();
+            PrintStatic.PrintGameBeginning();
 
             while (gameState == (int)GameState.GAME_CONTINUES)
             {
-                PrintGameMenu();
+                PrintStatic.PrintGameMenu();
 
                 //Recording the parse result regardless in the event that further action needs to be taken upon failure.
                 bool userInputParseSuccess = int.TryParse(Console.ReadLine(), out int menuChoice);
@@ -53,9 +54,7 @@ namespace GameOfWar.GameLogic
                         PrintRemainingHumanCards(humanPlayer);
                         break;
                     default:
-                        Console.WriteLine();
-                        Console.WriteLine("The inputted option was not recognized.  Please select a valid menu option.");
-                        Console.WriteLine();
+                        PrintStatic.PrintInvalidUserInputMessage();
                         break;
                 }
 
@@ -64,16 +63,16 @@ namespace GameOfWar.GameLogic
             switch (gameState)
             {
                 case (int)GameState.HUMAN_LOSS:
-                    PrintHumanLoss();
+                    PrintStatic.PrintHumanLoss();
                     break;
                 case (int)GameState.COMPUTER_LOSS:
-                    PrintHumanWin();
+                    PrintStatic.PrintHumanWin();
                     break;
                 case (int)GameState.WARFORFEIT_HUMAN:
-                    PrintHumanWarForfeit();
+                    PrintStatic.PrintHumanWarForfeit();
                     break;
                 case (int)GameState.WARFORFEIT_COMPUTER:
-                    PrintComputerWarForfeit();
+                    PrintStatic.PrintComputerWarForfeit();
                     break;
             }
 
@@ -332,41 +331,7 @@ namespace GameOfWar.GameLogic
         }
 
         //A future improvement should be to move the print functionality out of the game logic class.
-        #region PRINT FUNCTIONS
-
-        private void PrintHumanWarForfeit()
-        {
-            Console.WriteLine("");
-            Console.WriteLine("You have run out of cards during a WAR!  You are unable to continue fighting, and have lost the game!");
-            Console.WriteLine("");
-        }
-
-        private void PrintComputerWarForfeit()
-        {
-            Console.WriteLine("");
-            Console.WriteLine("The computer has run out of cards during a WAR!  It is unable to continue fighting, and has lost the game!");
-            Console.WriteLine("");
-            Console.WriteLine("Congratulations, you are victorious!");
-            Console.WriteLine("");
-        }
-
-
-        private void PrintHumanLoss()
-        {
-            Console.WriteLine("");
-            Console.WriteLine("The computer has taken all of your cards!  You have zero cards left in your hand!");
-            Console.WriteLine("");
-            Console.WriteLine("You have lost the game of war.  The computer reigns victorious!");
-
-        }
-
-        private void PrintHumanWin()
-        {
-            Console.WriteLine("");
-            Console.WriteLine("You have seized all of the computer's cards! The computer has zero cards left in its hand!");
-            Console.WriteLine("");
-            Console.WriteLine("You have won the game of war. You reign victorious!");
-        }
+        #region DYNAMIC PRINT FUNCTIONS
 
         private void PrintRoundWinHuman(Player computerPlayer)
         {
@@ -384,16 +349,6 @@ namespace GameOfWar.GameLogic
             Console.WriteLine("");
         }
 
-        private void PrintGameMenu()
-        {
-            Console.WriteLine("");
-            Console.WriteLine("-----");
-            Console.WriteLine("1) Play your top card");
-            Console.WriteLine("2) Check number of remaining cards");
-            Console.WriteLine("-----");
-            Console.WriteLine("");
-        }
-
         private void PrintCurrentMove(Player humanPlayer, Player computerPlayer)
         {
             Console.WriteLine("");
@@ -407,7 +362,7 @@ namespace GameOfWar.GameLogic
 
         private void PrintWarFinalCard(Card humanWarCard, Card computerWarCard)
         {
-            PrintWarFlavorText();
+            PrintStatic.PrintWarFlavorText();
 
             Console.WriteLine("");
             Console.WriteLine("Your final war card is the " + TranslateNumberToFaceCard(humanWarCard.CardValue) + " of " + humanWarCard.CardSuit + "!");
@@ -418,31 +373,13 @@ namespace GameOfWar.GameLogic
             Console.WriteLine("");
         }
 
-        private void PrintWarFlavorText()
-        {
-            Console.WriteLine("");
-            Console.WriteLine("The card values are tied!  W-A-R has begun!");
-            Console.WriteLine("Both yourself and the computer lay down three additional cards face down, and prepare to play your final card.");
-            Console.WriteLine("");
-        }
-
-        private void PrintGameBeginning()
-        {
-            Console.WriteLine("");
-            Console.WriteLine("--------------------------");
-            Console.WriteLine("--------------------------");
-            Console.WriteLine("----The Game has begun----");
-            Console.WriteLine("--------------------------");
-            Console.WriteLine("--------------------------");
-            Console.WriteLine("");
-        }
-
         private void PrintRemainingHumanCards(Player humanPlayer)
         {
             Console.WriteLine("");
             Console.WriteLine("You have " + humanPlayer.PlayerCards.Count + " cards left in your hand.");
             Console.WriteLine("");
         }
+
         #endregion
 
     }

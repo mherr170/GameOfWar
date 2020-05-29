@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Timers;
 using GameOfWar.GameLogic;
+using GameOfWar.PrintLogic.PrintStatic;
 
 namespace GameOfWar
 {
@@ -17,7 +18,7 @@ namespace GameOfWar
 
             while (menuChoice != EXIT)
             {
-                PrintMainMenu();
+                PrintStatic.PrintMainMenu();
 
                 //Not explicitly necessary to evaluate the TryParse result due the the out parameter.
                 //However, recording the parse result regardless in the event that further action needs to be taken upon failure.
@@ -39,26 +40,10 @@ namespace GameOfWar
                         ExitGame();
                         break;
                     default:
-                        Console.WriteLine();
-                        Console.WriteLine("The inputted option was not recognized.  Please select a valid menu option.");
-                        Console.WriteLine();
+                        PrintStatic.PrintInvalidUserInputMessage();
                         break;
                 }
             }
-        }
-
-        private static void PrintMainMenu()
-        {
-            Console.WriteLine();
-            Console.WriteLine("--------------------------");
-            Console.WriteLine("--------------------------");
-            Console.WriteLine("------Game Of War---------");
-            Console.WriteLine("--------------------------");
-            Console.WriteLine("--------------------------");
-            Console.WriteLine();
-
-            Console.WriteLine("1) Start a new game.");
-            Console.WriteLine("2) Exit the game.");
         }
 
         private static void ExitGame()
@@ -69,9 +54,7 @@ namespace GameOfWar
             closeAppTimer.Elapsed += CloseAppTimer_Elapsed;
             closeAppTimer.Start();
 
-            Console.WriteLine();
-            Console.WriteLine("Thank you for playing the Game Of War!");
-            Console.WriteLine();
+            PrintStatic.PrintExitMessage();
 
             Console.ReadKey();
         }
