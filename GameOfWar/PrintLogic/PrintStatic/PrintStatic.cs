@@ -1,9 +1,93 @@
 ﻿using System;
+using System.Linq;
+using System.Collections.Generic;
+using GameOfWar.DTO;
+using GameOfWar.Utility;
 
 namespace GameOfWar.PrintLogic.PrintStatic
 {
     static class PrintStatic
     {
+
+        #region Print Functions with Parameters
+
+        public static void PrintRemainingHumanCards(Player humanPlayer)
+        {
+            Console.WriteLine("");
+            Console.WriteLine("You have " + humanPlayer.PlayerCards.Count + " cards left in your hand.");
+            Console.WriteLine("");
+        }
+
+        public static void PrintWarFinalCard(Card humanWarCard, Card computerWarCard)
+        {
+            PrintWarFlavorText();
+
+            Console.WriteLine("");
+            Console.WriteLine("Your final war card is the " + StaticGameUtility.TranslateNumberToFaceCard(humanWarCard.CardValue) + " of " + humanWarCard.CardSuit + "!");
+            Console.WriteLine("");
+
+            Console.WriteLine("");
+            Console.WriteLine("The computer's war card is the " + StaticGameUtility.TranslateNumberToFaceCard(computerWarCard.CardValue) + " of " + computerWarCard.CardSuit + "!");
+            Console.WriteLine("");
+        }
+
+        public static void PrintRoundWinHuman(Player computerPlayer)
+        {
+            Console.WriteLine("");
+            Console.WriteLine("You won this round!");
+            Console.WriteLine("You have placed your card and the " + StaticGameUtility.TranslateNumberToFaceCard(computerPlayer.PlayerCards.First().CardValue) + " of " + computerPlayer.PlayerCards.First().CardSuit + " into the bottom of your hand.");
+            Console.WriteLine("");
+        }
+
+        public static void PrintRoundWinComputer(Player humanPlayer)
+        {
+            Console.WriteLine("");
+            Console.WriteLine("You lost this round!");
+            Console.WriteLine("The computer has taken its card and the " + StaticGameUtility.TranslateNumberToFaceCard(humanPlayer.PlayerCards.First().CardValue) + " of " + humanPlayer.PlayerCards.First().CardSuit + " and placed it into the bottom of its hand.");
+            Console.WriteLine("");
+        }
+
+        public static void PrintCurrentMove(Player humanPlayer, Player computerPlayer)
+        {
+            Console.WriteLine("");
+            Console.WriteLine("You play the " + StaticGameUtility.TranslateNumberToFaceCard(humanPlayer.PlayerCards.First().CardValue) + " of " + humanPlayer.PlayerCards.First().CardSuit + "!");
+            Console.WriteLine("");
+
+            Console.WriteLine("");
+            Console.WriteLine("The computer plays the " + StaticGameUtility.TranslateNumberToFaceCard(computerPlayer.PlayerCards.First().CardValue) + " of " + computerPlayer.PlayerCards.First().CardSuit + "!");
+            Console.WriteLine("");
+        }
+
+        public static void PrintHumanWinsWar(List<Card> computerWarCards)
+        {
+            Console.WriteLine("");
+            Console.WriteLine("You have won the WAR!");
+
+            foreach (Card computerWarCard in computerWarCards)
+            {
+                Console.WriteLine("You have taken the " + StaticGameUtility.TranslateNumberToFaceCard(computerWarCard.CardValue) + " of " + computerWarCard.CardSuit + " from the computer!");
+            }
+
+            Console.WriteLine("");
+        }
+
+        public static void PrintComputerWinsWar(List<Card> humanWarCards)
+        {
+            Console.WriteLine("");
+            Console.WriteLine("The computer has won the WAR!");
+
+            foreach (Card humanWarCard in humanWarCards)
+            {
+               Console.WriteLine("The computer has taken the " + StaticGameUtility.TranslateNumberToFaceCard(humanWarCard.CardValue) + " of " + humanWarCard.CardSuit + " from your deck!");
+            }
+
+            Console.WriteLine("");
+        }
+
+        #endregion
+
+        #region Parameterless Print Functions
+
         public static void PrintMainMenu()
         {
             Console.WriteLine();
@@ -94,5 +178,11 @@ namespace GameOfWar.PrintLogic.PrintStatic
             Console.WriteLine("");
         }
 
+        public static void PrintWarTie()
+        {
+            Console.Write("The current War has ended in a TIE!  Another War ensues!");
+        }
+
+        #endregion
     }
 }
